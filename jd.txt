@@ -1,0 +1,21 @@
+Job description
+Design and manage CI/CD pipelines with Jenkins for automated builds, tests, and deployments. Optimize AWS infrastructure, automate workflows with scripting, ensure system reliability, and collaborate across teams for seamless software delivery.
+
+Required Candidate profile
+
+5–8 yrs in DevOps with strong AWS (EC2, S3, Lambda), Jenkins, Git, scripting (Shell/PowerShell), & programming (Python/Java). Skilled in CDK, monitoring tools, & troubleshooting in fast-paced setups.
+
+Perks and benefits
+
+Best in the industry.
+Role: DevOps Engineer
+Industry Type: IT Services & Consulting
+Department: Engineering - Software & QA
+Employment Type: Full Time, Permanent
+Role Category: DevOps
+Education
+UG: Any Graduate
+Key Skills
+Skills highlighted with ‘‘ are preferred keyskills
+Ci/CdDevopsDevops Tools
+AWS Services,Java, Shell Scripting, GO,Version Control,CDK, Monitoring Tools,Jenkins, Git, Terraform, AWS, Python, Kubernetes
