@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resume Matcher</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
+    table { width: 100%; margin-top: 20px; }
+    th { background-color: #f2f2f2; }
+    #scoreChart { margin-top: 30px; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <h1>Resume Matcher</h1>
+
+  <form id="uploadForm">
+    <label>Job Description File:</label>
+    <input type="file" name="jd" required><br><br>
+
+    <label>Resumes (multiple):</label>
+    <input type="file" name="resumes" multiple required><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <button onclick="downloadExcel()" style="margin-top: 20px; display: none;" id="downloadBtn">Download Excel</button>
+
+  <table id="resultsTable" style="display: none;">
+    <thead>
+      <tr><th>Resume</th><th>Score</th><th>Reason</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <canvas id="scoreChart" width="600" height="300" style="display: none;"></canvas>
+
+  <script>
+    let results = [];
+
+    document.getElementById("uploadForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const formData = new FormData();
+
+      formData.append("jd", form.jd.files[0]);
+
+      for (let file of form.resumes.files) {
+        formData.append("resumes", file);
+      }
+
+      const response = await fetch("http://127.0.0.1:8000/upload", {
+        method: "POST",
+        body: formData
+      });
+
+      results = await response.json();
+
+      // Show Table
+      const table = document.getElementById("resultsTable");
+      const tbody = table.querySelector("tbody");
+      tbody.innerHTML = "";
+
+      results.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${item.name}</td><td>${item.score}</td><td>${item.reason}</td>`;
+        tbody.appendChild(row);
+      });
+
+      table.style.display = "table";
+      document.getElementById("downloadBtn").style.display = "inline-block";
+      document.getElementById("scoreChart").style.display = "block";
+
+      renderChart(results);
+    });
+
+    function renderChart(data) {
+      const labels = data.map(item => item.name);
+      const scores = data.map(item => item.score);
+
+      const ctx = document.getElementById('scoreChart').getContext('2d');
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Resume Score',
+            data: scores,
+            backgroundColor: 'rgba(75, 192, 192, 0.6)'
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 10
+            }
+          }
+        }
+      });
+    }
+
+    function downloadExcel() {
+      const wb = XLSX.utils.book_new();
+      const ws_data = [["Name", "Score", "Reason"], ...results.map(r => [r.name, r.score, r.reason])];
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      XLSX.utils.book_append_sheet(wb, ws, "Resume Scores");
+      XLSX.writeFile(wb, "resume_scores.xlsx");
+    }
+  </script>
+</body>
+</html>
