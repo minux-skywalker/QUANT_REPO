@@ -3,9 +3,12 @@ from typing import List
 from app.scorer import score_resume
 from app.parser import extract_text_from_file
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
+
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 app.add_middleware(
