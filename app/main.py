@@ -4,7 +4,6 @@ from app.scorer import score_resume
 from app.parser import extract_text_from_file
 from fastapi.middleware.cors import CORSMiddleware
 
-
 app = FastAPI()
 
 
